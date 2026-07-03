@@ -13,15 +13,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   const title = 'Home';
   res.render('home', { title });
 });
-app.get('/organizations', (req, res) => {
+app.get('/organizations', async (req, res) => {
   const title = 'Our Partner Organizations';
   res.render('organizations', { title });
 });
-app.get('/projects', (req, res) => {
+app.get('/projects', async (req, res) => {
   const title = 'Service Projects';
   res.render('projects', { title });
 });
