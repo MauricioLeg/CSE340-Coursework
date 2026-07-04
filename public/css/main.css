@@ -1,30 +1,313 @@
-html, body {
-    background-color: lightblue;
-    font-family: Arial, sans-serif;
+/* ==========================================================================
+   1. VARIABLES & DESIGN SYSTEM
+   ========================================================================== */
+:root {
+    /* Color Palette */
+    --clr-bg: #f8fafc;
+    --clr-surface: #ffffff;
+    --clr-text-main: #1e293b;
+    --clr-text-muted: #475569;
+    
+    /* High-contrast brand colors */
+    --clr-primary: #0f172a;       /* Deep slate/navy for heavy contrast */
+    --clr-accent: #0284c7;        /* Energetic sky blue for interactive elements */
+    --clr-accent-hover: #0369a1;  /* Darker blue for safe contrast on hover */
+    
+    /* Layout Tokens */
+    --max-width: 1100px;
+    --radius: 8px;
+    --transition-fast: 0.2s ease-in-out;
+    --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   2. GLOBAL RESETS & BASE STYLES
+   ========================================================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
     margin: 0;
-    padding: 20px;
+    padding: 0;
 }
 
 body {
-    nav {
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--clr-bg);
+    color: var(--clr-text-main);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-        li {
-            display: inline;
-            margin-right: 15px;
-        }
+/* Dynamic Page Entrance Animation */
+main {
+    flex: 1;
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    animation: fadeInPage var(--transition-smooth);
+}
 
-        a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-
-            &:hover {
-                color: #0066cc;
-            }
-        }
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
-}    
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   3. GLOBAL HEADER & NAVIGATION (Reusable)
+   ========================================================================== */
+nav {
+    background-color: var(--clr-surface);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav ul {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1.5rem;
+}
+
+nav li {
+    position: relative;
+}
+
+nav a {
+    display: block;
+    padding: 1.25rem 1.5rem;
+    color: var(--clr-text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    transition: color var(--transition-fast);
+}
+
+/* Nav Hover Interactive Animation */
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: var(--clr-accent);
+    transition: width var(--transition-fast), left var(--transition-fast);
+}
+
+nav a:hover,
+nav a:focus {
+    color: var(--clr-primary);
+}
+
+nav a:hover::after,
+nav a:focus-visible::after,
+nav a.active::after {
+    width: 100%;
+    left: 0;
+}
+
+nav a.active {
+    color: var(--clr-accent-hover);
+    font-weight: 700;
+}
+
+/* Focus styles for keyboard navigation accessibility */
+nav a:focus-visible {
+    outline: 2px dashed var(--clr-accent);
+    outline-offset: -4px;
+}
+
+/* Mobile responsive adjustments for navigation */
+@media (max-width: 600px) {
+    nav ul {
+        flex-wrap: wrap;
+        padding: 0.5rem;
+    }
+    nav a {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* ==========================================================================
+   4. GLOBAL FOOTER (Reusable)
+   ========================================================================== */
+footer {
+    background-color: var(--clr-primary);
+    color: #ffffff; /* Explicit high contrast white over dark slate */
+    text-align: center;
+    padding: 2rem 1.5rem;
+    margin-top: auto;
+    font-size: 0.9rem;
+    border-top: 4px solid var(--clr-accent);
+}
+
+footer p {
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   5. HOME PAGE SPECIFIC BLOCKS
+   ========================================================================== */
+/* Typography */
+h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--clr-primary);
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+/* Clean underline accent for main headers */
+h1::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background-color: var(--clr-accent);
+    margin-top: 0.25rem;
+    border-radius: 2px;
+}
+
+h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--clr-text-main);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    max-width: 32ch; /* Keeps heading layout elegant */
+}
+
+main > p {
+    font-size: 1.15rem;
+    color: var(--clr-text-muted);
+    max-width: 65ch; /* Optimal reading width for readability */
+    margin-bottom: 2.5rem;
+}
+
+/* Hero Logo Styling */
+.main-logo {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 2rem 0;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    
+    /* Sophisticated, subtle floating animation */
+    animation: floatImage 6s ease-in-out infinite;
+}
+
+@keyframes floatImage {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Home Layout Responsiveness Adjustments */
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    main > p { font-size: 1.05rem; }
+    .main-logo {
+        max-width: 100%;
+        margin: 2rem auto;
+    }
+}
+
+/* ==========================================================================
+   6. ORGANIZATIONS PAGE SPECIFIC BLOCKS
+   ========================================================================== */
+
+/* Main layout context for the organizations view */
+main > p + ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.75rem;
+    margin-top: 2rem;
+}
+
+/* Individual Organization Card Layout */
+main > p + ul li {
+    background-color: var(--clr-surface);
+    border: 1px solid #e2e8f0; /* Subtle border for structural alignment */
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    
+    /* Interactive card expansion transition */
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Card Interaction state */
+main > p + ul li:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08);
+    border-color: var(--clr-accent);
+}
+
+/* Partner Logo Framework */
+main > p + ul img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 1.25rem;
+    filter: grayscale(10%) contrast(95%);
+    transition: filter var(--transition-fast);
+}
+
+main > p + ul li:hover img {
+    filter: grayscale(0%) contrast(100%);
+}
+
+/* Typography elements inside the card */
+main > p + ul strong {
+    font-size: 1.25rem;
+    color: var(--clr-primary);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Contact information string rendering */
+main > p + ul li {
+    font-size: 0.95rem;
+    color: var(--clr-text-muted);
+    word-break: break-all; /* Prevents overflow strings from breaking layouts on small viewports */
+}
+
+/* Small adjustments for tight mobile screens */
+@media (max-width: 480px) {
+    main > p + ul {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+    
+    main > p + ul li {
+        padding: 1.5rem;
+    }
+}
