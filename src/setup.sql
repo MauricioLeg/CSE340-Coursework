@@ -73,3 +73,65 @@ VALUES
 (3, 'Local Homeless Shelter Meal Prep', 'Chopping ingredients, cooking healthy meals, and serving dinner to residents staying at the municipal temporary shelter.', 'Hope House Shelter', '2026-08-30'),
 (3, 'Annual Charity 5K Race Support', 'Setting up water stations, directing runners along the path, and handing out medals at the finish line for a local health fundraiser.', 'City Sports Complex', '2026-09-15'),
 (3, 'Community Clothing Sorting Drive', 'Collecting, inspecting, and organizing winter clothing donations into neatly labeled boxes categorized by size for winter distribution.', 'St. Jude Community Hall', '2026-10-10');
+
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE -- Ensures category names cannot be duplicated
+);
+
+CREATE TABLE project_category (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (project_id, category_id),    
+    CONSTRAINT fk_project
+        FOREIGN KEY(project_id) 
+        REFERENCES project(project_id) 
+        ON DELETE CASCADE,        
+    CONSTRAINT fk_category
+        FOREIGN KEY(category_id) 
+        REFERENCES category(category_id) 
+        ON DELETE CASCADE
+);
+
+INSERT INTO category (name) VALUES 
+('Environmental'),
+('Educational'),
+('Community Service'),
+('Health and Wellness');
+
+INSERT INTO project_category (project_id, category_id) VALUES
+-- BrightFuture Builders Projects (IDs 1-5)
+(1, 3), -- Community Center Renovation -> Community Service
+(2, 1), -- Eco-Friendly Park Benches -> Environmental
+(2, 3), -- Eco-Friendly Park Benches -> Community Service
+(3, 3), -- Access Ramp Construction -> Community Service
+(4, 1), -- Sustainable Greenhouse Build -> Environmental
+(4, 2), -- Sustainable Greenhouse Build -> Educational
+(5, 3), -- Public Library Roof Repair -> Community Service
+
+-- GreenHarvest Growers Projects (IDs 6-10)
+(6, 1), -- Neighborhood Compost Drive -> Environmental
+(6, 2), -- Neighborhood Compost Drive -> Educational
+(7, 1), -- School Vegetable Garden Setup -> Environmental
+(7, 2), -- School Vegetable Garden Setup -> Educational
+(8, 1), -- Urban Orchard Planting -> Environmental
+(9, 2), -- Hydroponics Workshop for Teens -> Educational
+(10, 3),-- Harvest and Food Bank Donation -> Community Service
+(10, 4),-- Harvest and Food Bank Donation -> Health and Wellness
+
+-- UnityServe Volunteers Projects (IDs 11-15)
+(11, 3),-- Senior Center Companion Day -> Community Service
+(11, 4),-- Senior Center Companion Day -> Health and Wellness
+(12, 2),-- Back-to-School Supply Packing -> Educational
+(12, 3),-- Back-to-School Supply Packing -> Community Service
+(13, 3),-- Local Homeless Shelter Meal Prep -> Community Service
+(13, 4),-- Local Homeless Shelter Meal Prep -> Health and Wellness
+(14, 3),-- Annual Charity 5K Race Support -> Community Service
+(14, 4),-- Annual Charity 5K Race Support -> Health and Wellness
+(15, 3);-- Community Clothing Sorting Drive -> Community Service
+
+SELECT p.title, c.name AS category_name
+FROM project p
+JOIN project_category pc ON p.project_id = pc.project_id
+JOIN category c ON pc.category_id = c.category_id
+ORDER BY p.project_id;
