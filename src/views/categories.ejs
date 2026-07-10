@@ -1,10 +1,19 @@
 <%- include('partials/header') %>
     <main>
         <h1><%= title %></h1>
-
-        <p>Environmental</p>
-        <p>Educational</p>
-        <p>Community Service</p>
-        <p>Health and Wellness</p>
+        <h2>Service Categories</h2>
+        <div class="categories-container">
+            <% if (categories && categories.length > 0) { %>
+                <ul class="category-grid">
+                    <% categories.forEach(category => { %>
+                        <li class="category-card">
+                            <h3><%= category.name %></h3>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                <p>No service categories available at the moment.</p>
+            <% } %>
+        </div>
     </main>
 <%- include('partials/footer') %>
