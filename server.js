@@ -2,9 +2,7 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
-import { getAllOrganizations } from './src/models/organizations.js';
-import { getAllProjects } from './src/models/projects.js';
-import { getAllCategories } from './src/models/categories.js';
+import router from './src/routes.js';
 
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 const PORT = process.env.PORT || 3000;
@@ -23,35 +21,13 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 app.use((req, res, next) => {
   res.locals.NODE_ENV = NODE_ENV;
   next();
 });
-app.get('/test-error', (req, res, next) => {
-  const error = new Error('This is a test error');
-  error.status = 500;
-  next(error);
-});
-app.get('/', async (req, res) => {
-  const title = 'Home';
-  res.render('home', { title });
-});
-app.get('/organizations', async (req, res) => {
-  const organizations = await getAllOrganizations();
-  const title = 'Our Partner Organizations';
-  
-  res.render('organizations', { title, organizations });
-});
-app.get('/projects', async (req, res) => {
-  const projects = await getAllProjects();
-  const title = 'Service Projects';
-  res.render('projects', { title, projects });
-});
-app.get('/categories', async (req, res) => {
-  const categories = await getAllCategories();
-  const title = 'Service Categories';
-  res.render('categories', { title, categories });
-});
+
+app.use(router);
 
 app.use((req, res, next) => {
   const err = new Error('Page Not Found');
