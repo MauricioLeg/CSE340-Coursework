@@ -1,6 +1,5 @@
 import { getAllCategories, getCategoryById, getCategoriesByProjectId } from '../models/categories.js';
 import { getAllProjects, getProjectsByCategoryId } from '../models/projects.js';
-console.log('Is getProjectsByCategoryId a function?', typeof getProjectsByCategoryId);
 
 const showCategoriesPage = async (req, res) => {
   const categories = await getAllCategories();
