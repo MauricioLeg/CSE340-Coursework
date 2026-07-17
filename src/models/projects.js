@@ -19,7 +19,7 @@ const getProjectsByOrganizationId = async (organizationID) => {
         ORDER BY date;
     `;
 
-    const queryParams = [organizationID];
+    const queryParams = [Number(organizationID)];
     const result = await db.query(query, queryParams);
 
     return result.rows;
@@ -31,10 +31,12 @@ const getUpcomingProjects = async (number_of_projects) => {
     FROM public.project p
     JOIN public.organization o ON p.organization_id = o.organization_id
     WHERE date >= NOW()
-    ORDER BY date ASC;
+    ORDER BY date ASC
+    LIMIT $1;
     `;
     
-    const result = await db.query(query);
+    const queryParams = [Number(number_of_projects)];
+    const result = await db.query(query, queryParams);
     
     return result.rows;
 };
@@ -44,10 +46,11 @@ const getProjectDetails = async (id) => {
     SELECT p.project_id, p.title, p.description, p.location, p.date, p.organization_id, o.name
     FROM public.project p
     JOIN public.organization o ON p.organization_id = o.organization_id
-    WHERE p.project_id = ${id};
+    WHERE p.project_id = $1;
     `;
     
-    const result = await db.query(query);
+    const queryParams = [Number(id)];
+    const result = await db.query(query, queryParams);
     
     return result.rows[0];
 };
