@@ -1,7 +1,24 @@
 <%- include('partials/header') -%>
-    <h1><%= projectDetails.title %></h1>
-    <p><%= projectDetails.description %></p>
-    <p><strong>Date:</strong> <%= projectDetails.date %></p>
-    <p><strong>Location:</strong> <%= projectDetails.location %></p>
-    <p><strong>Organization:</strong> <a href="/organization/<%= projectDetails.organization_id %>"><%= projectDetails.name %></a></p>
+    <h1><%= projectDetails.title%></h1>
+    <p><%= projectDetails.description || 'No description available.' %></p>
+    <p><strong>Date:</strong> <%= projectDetails.date || 'Not available' %></p>
+    <p><strong>Location:</strong> <%= projectDetails.location || 'Not available' %></p>
+    <p><strong>Organization:</strong>
+        <% if (projectDetails.organization_id) { %>
+            <a href="/organization/<%= projectDetails.organization_id %>"><%= projectDetails.name || 'Organization' %></a>
+        <% } else { %>
+            Not available
+        <% } %>
+    </p>
+
+    <h2>Categories</h2>
+    <% if (categories && categories.length > 0) { %>
+        <ul>
+            <% categories.forEach(category => { %>
+                <li><a href="/category/<%= category.category_id %>"><%= category.name %></a></li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>No categories available.</p>
+    <% } %>
 <%- include('partials/footer') -%>
