@@ -1,10 +1,15 @@
+DROP TABLE IF EXISTS public.project_category CASCADE;
+DROP TABLE IF EXISTS public.category CASCADE;
+DROP TABLE IF EXISTS public.project CASCADE;
+DROP TABLE IF EXISTS public.organization CASCADE;
+
 CREATE TABLE organization (
-	organization_id SERIAL PRIMARY KEY,
-	name VARCHAR(150) NOT NULL,
-	description TEXT NOT NULL,
-	contact_email VARCHAR(255) NOT NULL,
-	logo_filename VARCHAR(255) NOT NULL
-)
+ organization_id SERIAL PRIMARY KEY,
+ name VARCHAR(150) NOT NULL,
+ description TEXT NOT NULL,
+ contact_email VARCHAR(255) NOT NULL,
+ logo_filename VARCHAR(255) NOT NULL
+);
 
 INSERT INTO organization (name, description, contact_email, logo_filename) 
 VALUES 
