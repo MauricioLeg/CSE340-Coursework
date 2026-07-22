@@ -15,3 +15,13 @@
             <li><a href="/categories" class="<%= title === 'Service Categories' ? 'active' : '' %>">Categories</a></li>
         </ul>
     </nav>
+    <div class="flash-messages">
+        <% const messages = flash(); %>
+        <% Object.keys(messages).forEach(type => { %>
+            <% if (messages[type].length > 0) { %>
+                <% messages[type].forEach(message => { %>
+                    <div class="flash-message flash-<%= type %>"><%= message %></div>
+                <% }); %>
+            <% } %>
+        <% }); %>
+    </div>
