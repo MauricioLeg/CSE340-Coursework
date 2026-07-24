@@ -10,10 +10,18 @@ import {
     showEditOrganizationForm,
     processEditOrganizationForm
 } from './controllers/organizations.js';
-import { showProjectsPage } from './controllers/projects.js';
+import { 
+    showProjectsPage,
+    showProjectDetailsPage,
+    showNewProjectForm,
+    processNewProjectForm,
+    showEditProjectForm,
+    processEditProjectForm,
+    projectValidation 
+} from './controllers/projects.js';
 import { showCategoriesPage } from './controllers/categories.js';
 import { showTestErrorPage } from './controllers/errors.js';
-import { showProjectDetailsPage } from './controllers/projects.js';
+import {  } from './controllers/projects.js';
 import { showCategoryDetailsPage } from './controllers/categories.js';
 
 const router = express.Router();
@@ -29,6 +37,10 @@ router.get('/new-organization', showNewOrganizationForm);
 router.post('/new-organization', organizationValidation, processNewOrganizationForm);
 router.get('/edit-organization/:id', showEditOrganizationForm);
 router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
+router.get('/new-project', showNewProjectForm);
+router.post('/new-project', projectValidation, processNewProjectForm);
+router.get('/edit-project/:id', showEditProjectForm);
+router.post('edit-project/:id', processEditProjectForm);
 
 router.get('/test-error', showTestErrorPage);
 

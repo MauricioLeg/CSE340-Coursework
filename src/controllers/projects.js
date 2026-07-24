@@ -1,5 +1,13 @@
-import { getAllProjects, getUpcomingProjects, getProjectDetails } from '../models/projects.js';
+import { 
+  getAllProjects, 
+  getUpcomingProjects, 
+  getProjectDetails,
+  createProject,
+  updateProject 
+} from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
+import { getAllOrganizations } from '../models/organizations.js';
+import { body, validationResult } from 'express-validator';
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
@@ -29,4 +37,95 @@ const showProjectDetailsPage = async (req, res) => {
   }
 }
 
-export { showProjectsPage, showProjectDetailsPage };
+const showNewProjectForm = async (req, res) => {
+  const organizations = await getAllOrganizations();
+  const title = 'Add New Service Project';
+
+  res.render('new-project', { title, organizations });
+}
+
+const processNewProjectForm = async (req, res) => {
+  const results = validationResult(req);
+  if (!results.isEmpty()) {
+    results.array().forEach(error => {
+      req.flash('error', error.msg);
+    });
+    return res.redirect('/new-project');
+  }
+
+  const { title, description, location, date, organizationId } = req.body;
+  try {
+    const newProjectId = await createProject(title, description, location, date, organizationId);
+
+    req.flash('success', 'New service project created successfully!');
+    res.redirect(`/project/${newProjectId}`);
+  } catch (error) {
+    console.error('Error creating new project:', error);
+    req.flash('error', 'There was an error creating the service project.');
+    res.redirect('/new-project');
+  }
+}
+
+const projectValidation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Project title is required.')
+    .isLength({ min: 3, max: 200 })
+    .withMessage('Project title must be between 3 and 200 characters.'),
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Project description is required.')
+    .isLength({ max: 500 })
+    .withMessage('Project description must not exceed 500 characters.'),
+  body('location')
+    .notEmpty()
+    .withMessage('Location is required.')
+    .isLength({ max: 200})
+    .withMessage('Location must not exceed 200 characters'),
+  body('date')
+    .notEmpty()
+    .withMessage('Date is required')
+    .isISO8601()
+    .withMessage('Date must be a valid date format'),
+  body('organizationId')
+    .notEmpty().withMessage('Organization is required')
+    .isInt().withMessage('Organization must be a valid integer')
+];
+
+const showEditProjectForm = async (req, res) => {
+  const projectId = req.params.id;
+  const projectDetails = await getProjectDetails(projectId);
+
+  const title = 'Edit Project';
+  res.render('edit-project', { title, projectDetails });
+};
+
+const processEditProjectForm = async (req, res) => {
+  const results = validationResult(req);
+  if (!results.isEmpty()) {
+    results.array().forEach((error) => {
+      req.flash('error', error.msg);
+    })
+
+    return res.redirect('/edit-project/' + req.params.id);
+  }
+
+  const projectId = req.params.id;
+  const { title, description, location, date } = req.body;
+  await updateProject(projectId, title, description, location, date);
+  
+  req.flash('success', 'Project updated successfully!');
+  res.redirect(`/project/${projectId}`);
+}
+
+export { 
+  showProjectsPage, 
+  showProjectDetailsPage,
+  showNewProjectForm,
+  processNewProjectForm,
+  showEditProjectForm,
+  processEditProjectForm,
+  projectValidation 
+};

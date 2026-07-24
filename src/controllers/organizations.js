@@ -118,7 +118,7 @@ const processEditOrganizationForm = async (req, res) => {
   const { name, description, contact_email, logo_filename } = req.body;
   await updateOrganization(organizationId, name, description, contact_email, logo_filename);
   
-  req.flash('succes', 'Organization updated successfully!');
+  req.flash('success', 'Organization updated successfully!');
 
   res.redirect(`/organization/${organizationId}`);
 }
